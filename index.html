@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Info Form</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1>Student Info Form</h1>
+    <form id="studentForm" onsubmit="handleSubmit(event)">
+      <label for="fullName">Full Name:</label>
+      <input
+        type="text"
+        id="fullName"
+        name="fullName"
+        required
+        pattern="[A-Za-z\s]{1,50}"
+        title="Only alphabets and spaces allowed, max 50 characters"
+      />
+      <br />
+      <label for="rollNumber">Roll Number:</label>
+      <input
+        type="text"
+        id="rollNumber"
+        name="rollNumber"
+        required
+        pattern="[A-Za-z]{4}\d{4}[A-Za-z]{1}"
+        title="Format: ABCD1234E"
+      />
+      <br />
+      <div id="subjects">
+        <div class="subject-row">
+          <label for="subject">Subject:</label>
+          <input
+            type="text"
+            name="subject"
+            required
+            pattern="[A-Za-z\s]+"
+            title="Only alphabets and spaces allowed"
+          />
+          <label for="outOf">Out of:</label>
+          <select name="outOf" required>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+          <label for="marksObtained">Obtained Marks:</label>
+          <input
+            type="number"
+            name="marksObtained"
+            required
+            min="0"
+            max="100"
+          />
+          <button type="button" onclick="removeSubject(this)">
+            Remove Subject
+          </button>
+        </div>
+      </div>
+      <button type="button" onclick="addSubject()">Add More Subject</button>
+      <br />
+      <button type="submit">Submit</button>
+    </form>
+
+    <script src="script.js"></script>
+  </body>
+</html>

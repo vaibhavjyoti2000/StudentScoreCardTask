@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Score Card</title>
+    <link rel="stylesheet" href="scoreCard.css" />
+  </head>
+  <body>
+    <h1>Score Card</h1>
+    <div id="studentDetails"></div>
+    <table>
+      <thead>
+        <tr>
+          <th>Sr. No.</th>
+          <th>Subject</th>
+          <th>Maximum Marks</th>
+          <th>Marks Obtained</th>
+          <th>Percentage</th>
+          <th>Grade</th>
+        </tr>
+      </thead>
+      <tbody id="scoreTableBody"></tbody>
+    </table>
+    <div id="remarks"></div>
+
+    <script>
+      function calculateGrade(percentage) {
+        if (percentage >= 75) return "Distinction";
+        if (percentage >= 60) return "First Class";
+        if (percentage >= 35) return "Pass";
+        return "Fail";
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const studentData = JSON.parse(localStorage.getItem("studentData"));
+        const studentDetailsDiv = document.getElementById("studentDetails");
+        const scoreTableBody = document.getElementById("scoreTableBody");
+        const remarksDiv = document.getElementById("remarks");
+
+        studentDetailsDiv.innerHTML = `
+                <p><strong>Full Name:</strong> ${studentData.fullName}</p>
+                <p><strong>Roll Number:</strong> ${studentData.rollNumber}</p>
+                <p><strong>College:</strong> XYZ College</p>
+                <p><strong>University:</strong> ABC University</p>
+                <p><strong>Academic Year:</strong> 2023-2024</p>
+            `;
+
+        let totalSubjects = studentData.subjects.length;
+        let totalMarks = 0;
+        let obtainedMarks = 0;
+        let failedSubjects = 0;
+
+        studentData.subjects.forEach((subject, index) => {
+          const maxMarks = parseInt(subject.outOf);
+          const marks = parseInt(subject.marksObtained);
+          const percentage = (marks / maxMarks) * 100;
+          const grade = calculateGrade(percentage);
+
+          totalMarks += maxMarks;
+          obtainedMarks += marks;
+
+          if (grade === "Fail") {
+            failedSubjects++;
+          }
+
+          const row = document.createElement("tr");
+          if (grade === "Fail") {
+            row.style.color = "red";
+          }
+          row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${subject.subject}</td>
+                    <td>${maxMarks}</td>
+                    <td>${marks}</td>
+                    <td>${percentage.toFixed(2)}%</td>
+                    <td>${grade}</td>
+                `;
+          scoreTableBody.appendChild(row);
+        });
+
+        const overallPercentage = (obtainedMarks / totalMarks) * 100;
+        let remarks = "";
+        if (failedSubjects > 0) {
+          remarks = `Failed in ${failedSubjects} subjects`;
+        } else if (overallPercentage >= 75) {
+          remarks = "Passed with Distinction";
+        } else if (overallPercentage >= 60) {
+          remarks = "Passed with First Class";
+        } else if (overallPercentage >= 35) {
+          remarks = "Passed";
+        } else {
+          remarks = "Failed";
+        }
+
+        remarksDiv.innerHTML = `<p><strong>Remarks:</strong> ${remarks}</p>`;
+      });
+    </script>
+  </body>
+</html>
